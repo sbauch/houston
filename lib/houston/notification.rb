@@ -2,9 +2,9 @@ require 'json'
 
 module Houston
   class Notification
-    MAXIMUM_PAYLOAD_SIZE = 256
+    MAXIMUM_PAYLOAD_SIZE = 2000
 
-    attr_accessor :token, :alert, :badge, :sound, :content_available, :custom_data, :id, :expiry, :priority
+    attr_accessor :token, :alert, :badge, :sound, :content_available, :custom_data, :id, :expiry, :priority, :category
     attr_reader :sent_at
 
     alias :device :token
@@ -19,6 +19,8 @@ module Houston
       @id = options.delete(:id)
       @priority = options.delete(:priority)
       @content_available = options.delete(:content_available)
+      
+      @category = options.delete(:category)
 
       @custom_data = options
     end
@@ -30,7 +32,8 @@ module Houston
       json['aps']['badge'] = @badge.to_i rescue 0 if @badge
       json['aps']['sound'] = @sound if @sound
       json['aps']['content-available'] = 1 if @content_available
-
+      json['aps']['category'] = @category if @category
+        
       json
     end
 
